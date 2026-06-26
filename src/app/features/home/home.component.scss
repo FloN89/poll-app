@@ -1,0 +1,271 @@
+.hero {
+  min-height: 700px;
+  background: var(--bg);
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 470px;
+    gap: 60px;
+    align-items: center;
+    padding: 72px 0 120px;
+  }
+
+  &__text {
+    max-width: 720px;
+
+    h1 {
+      margin: 0 0 32px;
+    }
+
+    p {
+      max-width: 680px;
+      margin: 0 0 36px;
+      color: white;
+      font-size: clamp(20px, 2vw, 28px);
+      line-height: 1.25;
+    }
+  }
+
+  &__btn {
+    min-width: 132px;
+  }
+
+  &__plus {
+    display: none;
+  }
+
+  &__image {
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: min(420px, 100%);
+      object-fit: contain;
+    }
+  }
+}
+
+.surveys {
+  padding: 18px 0 140px;
+  background: var(--bg);
+
+  &__title {
+    margin: 0 0 66px;
+    text-align: center;
+    font-size: clamp(44px, 5vw, 72px);
+  }
+
+  &__subtitle {
+    margin: 0 0 30px 90px;
+    color: white;
+    font-size: 34px;
+    font-weight: 500;
+  }
+}
+
+.ending-soon {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  width: min(1030px, 100%);
+  margin: 0 auto 40px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: min(1040px, 100%);
+  margin: 0 auto 40px;
+}
+
+.tabs {
+  display: flex;
+  gap: 24px;
+}
+
+.category {
+  position: relative;
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 5px 12px;
+    background: transparent;
+    color: white;
+    font-weight: 900;
+    font-size: 20px;
+  }
+
+  &__arrow {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 9px solid white;
+
+    &--open {
+      border-top: 0;
+      border-bottom: 9px solid var(--accent);
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    z-index: 10;
+    top: 38px;
+    right: 0;
+    width: 242px;
+    padding: 8px 0;
+    background: white;
+    color: var(--dark-text);
+    border-radius: 5px;
+    box-shadow: var(--shadow);
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 7px 10px;
+      background: transparent;
+      color: var(--dark-text);
+      text-align: left;
+
+      &:hover {
+        background: #f5edf8;
+      }
+    }
+  }
+}
+
+.poll-grid {
+  position: relative;
+  width: min(1040px, 100%);
+  max-height: 420px;
+  margin: 0 auto;
+  padding-right: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 99px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+.state {
+  width: min(1040px, 100%);
+  margin: 30px auto;
+  color: white;
+  font-size: 20px;
+}
+
+@media (max-width: 920px) {
+  .hero {
+    min-height: 100vh;
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      align-items: flex-start;
+      padding: 36px 0 80px;
+    }
+
+    &__text {
+      display: flex;
+      flex-direction: column;
+
+      h1 {
+        order: 1;
+        font-size: 54px;
+      }
+
+      p {
+        order: 3;
+        font-size: 20px;
+      }
+
+      .hero__btn {
+        order: 4;
+        align-self: center;
+        min-width: 172px;
+      }
+    }
+
+    &__image {
+      order: 2;
+      align-self: center;
+
+      img {
+        width: 245px;
+      }
+    }
+
+    &__plus {
+      display: inline;
+    }
+  }
+
+  .surveys {
+    padding-top: 72px;
+
+    &__title {
+      margin-bottom: 48px;
+      text-align: center;
+      font-size: 48px;
+    }
+
+    &__subtitle {
+      margin-left: 4px;
+      font-size: 26px;
+    }
+  }
+
+  .ending-soon {
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    margin-bottom: 48px;
+    padding-bottom: 6px;
+  }
+
+  .toolbar {
+    display: block;
+  }
+
+  .tabs {
+    margin-bottom: 50px;
+  }
+
+  .category {
+    margin-bottom: 28px;
+
+    &__trigger {
+      padding-left: 0;
+    }
+
+    &__menu {
+      right: auto;
+      left: 0;
+    }
+  }
+
+  .poll-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+}

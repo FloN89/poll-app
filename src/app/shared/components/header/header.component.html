@@ -1,0 +1,12 @@
+<header class="header" [class.header--light]="light">
+  <a class="header__logo" routerLink="/">
+    <img src="/assets/img/logo.svg" alt="Poll App" />
+    <span>Poll<br />App</span>
+  </a>
+
+  @if (showCreateButton) {
+    <button class="btn" type="button" (click)="createClicked.emit()">
+      Create survey
+    </button>
+  }
+</header>

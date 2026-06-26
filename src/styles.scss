@@ -1,1 +1,154 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: 'PollDisplay';
+  src: url('/assets/fonts/display.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #332339;
+  --bg-2: #3f2d45;
+  --card: #4a394f;
+  --paper: #f2edf4;
+  --paper-2: #ffffff;
+  --text: #fff7ff;
+  --dark-text: #302238;
+  --muted: #d9cddd;
+  --accent: #ffb36a;
+  --accent-2: #ffc993;
+  --cream: #ffe9d2;
+  --brown: #805f54;
+  --shadow: 0 10px 18px rgba(0, 0, 0, 0.22);
+  --radius-big: 72px;
+  --radius: 18px;
+  --max: 1280px;
+  --font-body: 'Nunito', 'Trebuchet MS', Arial, sans-serif;
+  --font-display: 'PollDisplay', 'Comic Sans MS', 'Trebuchet MS', cursive;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-shell {
+  width: min(var(--max), calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.display-title {
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: clamp(42px, 7vw, 92px);
+  line-height: 0.95;
+  letter-spacing: 1px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 10px;
+  background: var(--accent-2);
+  color: #20152a;
+  font-weight: 800;
+  box-shadow: none;
+  transition: transform 160ms ease, filter 160ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+  }
+
+  &--brown {
+    background: var(--brown);
+    color: white;
+  }
+
+  &--small {
+    min-height: 32px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+
+  &--ghost {
+    background: var(--cream);
+    color: #2b2030;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 10px;
+  border-radius: 0;
+  background: var(--accent-2);
+  color: #251b2d;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  border-radius: 9px;
+  background: #fbfafc;
+  color: var(--dark-text);
+  padding: 10px 14px;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(255, 179, 106, 0.35);
+  }
+}
+
+.textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+@media (max-width: 760px) {
+  .page-shell {
+    width: calc(100% - 28px);
+  }
+}

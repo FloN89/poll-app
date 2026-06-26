@@ -1,0 +1,188 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 72px 24px;
+}
+
+.modal {
+  position: relative;
+  width: min(1166px, 100%);
+  min-height: 680px;
+  margin: 0 auto;
+  padding: 40px 60px;
+  background: var(--bg);
+  color: white;
+  border-radius: 4px 96px 4px 4px;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__close {
+    gap: 12px;
+    border-radius: 9px;
+  }
+
+  h2 {
+    margin: 10px 0 30px;
+    font-size: clamp(42px, 5vw, 62px);
+  }
+
+  &__form {
+    position: relative;
+    min-height: 390px;
+    padding: 38px 34px;
+    background: var(--bg-2);
+    border-radius: 4px 76px 4px 4px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 70px;
+    align-items: start;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 48px;
+  }
+}
+
+.field {
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 800;
+    font-size: 18px;
+
+    span {
+      font-weight: 400;
+    }
+  }
+
+  &--text {
+    grid-row: span 2;
+  }
+}
+
+.questions {
+  width: min(430px, 100%);
+  margin-top: 60px;
+}
+
+.question {
+  margin-bottom: 42px;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    label {
+      font-size: 18px;
+      font-weight: 900;
+    }
+  }
+
+  h4 {
+    margin: 24px 0 12px;
+    font-size: 18px;
+  }
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0 0 270px;
+  font-size: 13px;
+  white-space: nowrap;
+
+  input {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.option {
+  display: grid;
+  grid-template-columns: 22px 1fr 28px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+
+  span {
+    font-weight: 900;
+    font-size: 20px;
+  }
+}
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  color: white;
+  font-size: 18px;
+}
+
+.link-btn {
+  margin: 12px 0 0 38px;
+  padding: 0 0 4px;
+  background: transparent;
+  color: white;
+  border-bottom: 2px solid white;
+  font-weight: 900;
+}
+
+.add-question {
+  position: absolute;
+  left: 56%;
+  top: 238px;
+}
+
+@media (max-width: 920px) {
+  .modal-backdrop {
+    padding: 0;
+  }
+
+  .modal {
+    min-height: 100vh;
+    padding: 28px 18px;
+    border-radius: 0;
+
+    &__grid {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    &__form {
+      padding: 24px 18px;
+      border-radius: 4px 56px 4px 4px;
+    }
+
+    &__actions {
+      margin-top: 26px;
+    }
+  }
+
+  .questions {
+    margin-top: 36px;
+  }
+
+  .check {
+    margin-left: 0;
+  }
+
+  .add-question {
+    position: static;
+    margin-top: 8px;
+  }
+}

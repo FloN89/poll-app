@@ -1,0 +1,9 @@
+<a class="poll-card" [class.poll-card--large]="large" [routerLink]="['/poll', poll.id]">
+  <span class="poll-card__category">{{ poll.category }}</span>
+
+  <h3>{{ poll.title }}</h3>
+
+  <span class="badge poll-card__badge">
+    {{ daysLeft() }}
+  </span>
+</a>

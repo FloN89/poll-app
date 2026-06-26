@@ -1,0 +1,98 @@
+<section class="hero">
+  <app-header />
+
+  <div class="page-shell hero__content">
+    <div class="hero__text">
+      <h1 class="display-title">Collect Feedback,<br />Unlock Ideas</h1>
+
+      <p>
+        Create and share surveys in minutes – from team events to workplace
+        culture. Collect opinions, engage your audience, and turn feedback into action.
+      </p>
+
+      <button class="btn hero__btn" type="button" (click)="modalOpen.set(true)">
+        New survey
+        <span class="hero__plus">⊕</span>
+      </button>
+    </div>
+
+    <div class="hero__image">
+      <img src="/assets/img/hero-illustration.png" alt="" />
+    </div>
+  </div>
+</section>
+
+<main class="surveys">
+  <section class="page-shell">
+    <h2 class="display-title surveys__title">Your surveys</h2>
+
+    <h3 class="surveys__subtitle">Ending soon surveys</h3>
+
+    <div class="ending-soon">
+      @for (poll of endingSoonPolls(); track poll.id) {
+        <app-poll-card [poll]="poll" [large]="true" />
+      }
+    </div>
+
+    <div class="toolbar">
+      <div class="tabs">
+        <button
+          class="btn btn--small"
+          type="button"
+          [class.btn--ghost]="selectedTab() !== 'active'"
+          (click)="selectedTab.set('active')"
+        >
+          Active survey
+        </button>
+
+        <button
+          class="btn btn--small"
+          type="button"
+          [class.btn--ghost]="selectedTab() !== 'past'"
+          (click)="selectedTab.set('past')"
+        >
+          Past survey
+        </button>
+      </div>
+
+      <div class="category">
+        <button
+          class="category__trigger"
+          type="button"
+          (click)="dropdownOpen.set(!dropdownOpen())"
+        >
+          Sort by categories
+          <span [class.category__arrow--open]="dropdownOpen()" class="category__arrow"></span>
+        </button>
+
+        @if (dropdownOpen()) {
+          <div class="category__menu">
+            <button type="button" (click)="setCategory('all')">All</button>
+
+            @for (category of categories; track category) {
+              <button type="button" (click)="setCategory(category)">
+                {{ category }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (loading()) {
+      <p class="state">Loading surveys...</p>
+    } @else {
+      <div class="poll-grid">
+        @for (poll of filteredPolls(); track poll.id) {
+          <app-poll-card [poll]="poll" />
+        } @empty {
+          <p class="state">No surveys found.</p>
+        }
+      </div>
+    }
+  </section>
+</main>
+
+@if (modalOpen()) {
+  <app-create-poll-modal (closed)="closeModalAndRefresh()" />
+}

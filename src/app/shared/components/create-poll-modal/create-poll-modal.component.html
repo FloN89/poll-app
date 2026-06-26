@@ -1,0 +1,132 @@
+<div class="modal-backdrop">
+  <section class="modal">
+    <div class="modal__top">
+      <span class="badge">Draft</span>
+
+      <button class="modal__close btn btn--brown" type="button" (click)="closed.emit()">
+        Cancel
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+
+    <h2 class="display-title">Create new survey</h2>
+
+    <form class="modal__form" [formGroup]="form">
+      <div class="modal__grid">
+        <div class="field">
+          <label for="title">Survey name</label>
+          <input id="title" class="input" type="text" formControlName="title" />
+        </div>
+
+        <div class="field field--text">
+          <label for="description">
+            Describing text <span>(optional)</span>
+          </label>
+          <textarea
+            id="description"
+            class="textarea"
+            formControlName="description"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="deadline">
+            Set end date <span>(optional)</span>
+          </label>
+          <input id="deadline" class="input" type="date" formControlName="deadline" />
+        </div>
+
+        <div class="field">
+          <label for="category">Choose category</label>
+          <select id="category" class="input" formControlName="category">
+            @for (category of categories; track category) {
+              <option [value]="category">{{ category }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="questions" formArrayName="questions">
+        @for (question of questions.controls; track question; let questionIndex = $index) {
+          <section class="question" [formGroupName]="questionIndex">
+            <div class="question__head">
+              <label>{{ questionIndex + 1 }}. Question</label>
+
+              <button
+                class="icon-btn"
+                type="button"
+                title="Delete question"
+                (click)="removeQuestion(questionIndex)"
+              >
+                🗑
+              </button>
+            </div>
+
+            <input class="input" type="text" formControlName="title" />
+
+            <label class="check">
+              <input type="checkbox" formControlName="allowMultiple" />
+              <span>Allow multiple answers.</span>
+            </label>
+
+            <h4>Answers</h4>
+
+            <div class="options" formArrayName="options">
+              @for (
+                option of optionControls(questionIndex).controls;
+                track option;
+                let optionIndex = $index
+              ) {
+                <div class="option">
+                  <span>{{ optionLetter(optionIndex) }}.</span>
+                  <input class="input" type="text" [formControlName]="optionIndex" />
+
+                  <button
+                    class="icon-btn"
+                    type="button"
+                    title="Delete answer"
+                    (click)="removeOption(questionIndex, optionIndex)"
+                  >
+                    🗑
+                  </button>
+                </div>
+              }
+            </div>
+
+            <button
+              class="link-btn"
+              type="button"
+              (click)="addOption(questionIndex)"
+            >
+              Add answer ⊕
+            </button>
+          </section>
+        }
+      </div>
+
+      <button class="btn btn--brown add-question" type="button" (click)="addQuestion()">
+        Add next question ⊕
+      </button>
+    </form>
+
+    <div class="modal__actions">
+      <button
+        class="btn btn--ghost"
+        type="button"
+        [disabled]="isSaving"
+        (click)="submit('draft')"
+      >
+        Save draft
+      </button>
+
+      <button
+        class="btn"
+        type="button"
+        [disabled]="isSaving"
+        (click)="submit('published')"
+      >
+        Publish
+      </button>
+    </div>
+  </section>
+</div>

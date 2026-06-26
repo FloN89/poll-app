@@ -1,0 +1,95 @@
+<div class="detail-page">
+  <app-header [light]="true" [showCreateButton]="true" />
+
+  @if (loading() && !poll()) {
+    <p class="detail-page__state">Loading survey...</p>
+  } @else if (poll()) {
+    <main class="detail page-shell">
+      <section class="survey">
+        <div class="survey__meta">
+          <div>
+            <span class="badge">{{ poll()!.status === 'draft' ? 'Draft' : 'Published' }}</span>
+            <p>Ends on {{ formattedDeadline() }}</p>
+          </div>
+
+          <p>Category: {{ poll()!.category }}</p>
+        </div>
+
+        <h1 class="display-title">{{ poll()!.title }}</h1>
+
+        <p class="survey__description">{{ poll()!.description }}</p>
+
+        <div class="question-grid">
+          @for (question of poll()!.questions; track question.id; let questionIndex = $index) {
+            <section class="question">
+              <h2>{{ questionIndex + 1 }}. {{ question.title }}</h2>
+
+              @if (question.allow_multiple) {
+                <p>More than one answers are possible.</p>
+              }
+
+              <div class="question__options">
+                @for (option of question.options; track option.id; let optionIndex = $index) {
+                  <label class="answer">
+                    <input
+                      [type]="question.allow_multiple ? 'checkbox' : 'radio'"
+                      [name]="question.id"
+                      [checked]="isChecked(question.id, option.id)"
+                      (change)="toggleOption(question, option.id)"
+                    />
+
+                    <span>
+                      {{ optionLetter(optionIndex) }}. {{ option.text }}
+                    </span>
+                  </label>
+                }
+              </div>
+
+              <button
+                class="btn btn--small"
+                type="button"
+                (click)="submitQuestion(question)"
+              >
+                Vote
+              </button>
+            </section>
+          }
+        </div>
+
+        <button class="btn survey__complete" type="button" (click)="completeSurvey()">
+          Complete survey
+        </button>
+      </section>
+
+      <aside class="results">
+        <h2>
+          Survey results
+          <span>LIVE</span>
+        </h2>
+
+        @for (question of poll()!.questions; track question.id; let questionIndex = $index) {
+          <section class="result">
+            <h3>{{ questionIndex + 1 }}. {{ question.title }}</h3>
+
+            @for (option of question.options; track option.id; let optionIndex = $index) {
+              <div class="bar-row">
+                <span>{{ optionLetter(optionIndex) }}</span>
+
+                <div class="bar">
+                  <div class="bar__fill" [style.width.%]="option.percentage"></div>
+                </div>
+
+                <strong>{{ option.percentage }}%</strong>
+              </div>
+            }
+          </section>
+        }
+      </aside>
+    </main>
+  } @else {
+    <p class="detail-page__state">
+      Survey not found.
+      <a routerLink="/">Back home</a>
+    </p>
+  }
+</div>
