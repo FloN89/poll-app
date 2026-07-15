@@ -2,11 +2,7 @@ import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import {
-  Poll,
-  PollQuestion,
-  formatDeadline,
-} from '../../core/models/poll.model';
+import { Poll, PollQuestion, formatDeadline } from '../../core/models/poll.model';
 import { PollService } from '../../core/services/poll.service';
 
 @Component({
@@ -28,9 +24,9 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   private voteChannel: RealtimeChannel | null = null;
 
   readonly formattedDeadline = computed(() => {
-    const poll = this.poll();
+    const currentPoll = this.poll();
 
-    return poll ? formatDeadline(poll.deadline) : '';
+    return currentPoll ? formatDeadline(currentPoll.deadline) : '';
   });
 
   /**
@@ -99,23 +95,23 @@ export class PollDetailComponent implements OnInit, OnDestroy {
    * Saves the selected answers for one question.
    */
   async submitQuestion(question: PollQuestion): Promise<void> {
-    const poll = this.poll();
+    const currentPoll = this.poll();
 
-    if (!poll) return;
+    if (!currentPoll) return;
 
-    await this.saveQuestionVote(poll.id, question);
-    await this.loadPoll(poll.id, false);
+    await this.saveQuestionVote(currentPoll.id, question);
+    await this.loadPoll(currentPoll.id, false);
   }
 
   /**
    * Saves answers for all questions and thanks the user.
    */
   async completeSurvey(): Promise<void> {
-    const poll = this.poll();
+    const currentPoll = this.poll();
 
-    if (!poll) return;
+    if (!currentPoll) return;
 
-    await this.submitMissingQuestions(poll);
+    await this.submitMissingQuestions(currentPoll);
     alert('Thank you for participating!');
   }
 
@@ -126,20 +122,20 @@ export class PollDetailComponent implements OnInit, OnDestroy {
     pollId: string,
     withSelections: boolean
   ): Promise<void> {
-    const poll = await this.pollService.getPoll(pollId);
+    const loadedPoll = await this.pollService.getPoll(pollId);
 
-    this.poll.set(poll);
+    this.poll.set(loadedPoll);
 
-    if (poll && withSelections) await this.restoreSelections(poll);
+    if (loadedPoll && withSelections) await this.restoreSelections(loadedPoll);
   }
 
   /**
    * Restores already selected answers for the current browser user.
    */
-  private async restoreSelections(poll: Poll): Promise<void> {
+  private async restoreSelections(currentPoll: Poll): Promise<void> {
     const selections: Record<string, string[]> = {};
 
-    for (const question of poll.questions) {
+    for (const question of currentPoll.questions) {
       selections[question.id] = await this.pollService.getSelectedOptionIds(question.id);
     }
 
@@ -208,10 +204,10 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   /**
    * Submits all questions that have not been submitted yet.
    */
-  private async submitMissingQuestions(poll: Poll): Promise<void> {
-    for (const question of poll.questions) {
+  private async submitMissingQuestions(currentPoll: Poll): Promise<void> {
+    for (const question of currentPoll.questions) {
       if (!this.submittedQuestions()[question.id]) {
-        await this.saveQuestionVote(poll.id, question);
+        await this.saveQuestionVote(currentPoll.id, question);
       }
     }
   }
