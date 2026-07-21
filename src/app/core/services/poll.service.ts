@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import { PostgrestError, RealtimeChannel } from '@supabase/supabase-js';
 import {
   CreatePollPayload,
   OptionRow,
@@ -56,7 +56,8 @@ export class PollService {
       .eq('id', pollId)
       .single();
 
-    if (error) return null;
+    if (this.isMissingRowError(error)) return null;
+    if (error) throw error;
 
     return (await this.attachDetails([data]))[0] ?? null;
   }
@@ -353,6 +354,13 @@ export class PollService {
     if (total === 0) return 0;
 
     return Math.round((part / total) * 100);
+  }
+
+  /**
+   * Checks whether Supabase reports that a requested row does not exist.
+   */
+  private isMissingRowError(error: PostgrestError | null): boolean {
+    return error?.code === 'PGRST116';
   }
 
   /**
