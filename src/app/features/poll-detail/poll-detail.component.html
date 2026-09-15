@@ -1,8 +1,15 @@
 <div class="detail-page">
-  <app-header [light]="true" [showCreateButton]="true" />
+  <app-header [light]="true" />
 
   @if (loading() && !poll()) {
     <p class="detail-page__state">Loading survey...</p>
+  } @else if (errorMessage() && !poll()) {
+    <p class="detail-page__state" role="alert">
+      {{ errorMessage() }}
+      <button class="link-btn" type="button" (click)="retryLoad()">
+        Try again
+      </button>
+    </p>
   } @else if (poll()) {
     <main class="detail page-shell">
       <section class="survey">
@@ -18,6 +25,10 @@
         <h1 class="display-title">{{ poll()!.title }}</h1>
 
         <p class="survey__description">{{ poll()!.description }}</p>
+
+        @if (errorMessage()) {
+          <p class="survey__error" role="alert">{{ errorMessage() }}</p>
+        }
 
         <div class="question-grid">
           @for (question of poll()!.questions; track question.id; let questionIndex = $index) {
@@ -35,6 +46,7 @@
                       [type]="question.allow_multiple ? 'checkbox' : 'radio'"
                       [name]="question.id"
                       [checked]="isChecked(question.id, option.id)"
+                      [disabled]="submittingQuestionId() !== null || pollClosed()"
                       (change)="toggleOption(question, option.id)"
                     />
 
@@ -48,6 +60,11 @@
               <button
                 class="btn btn--small"
                 type="button"
+                [disabled]="
+                  submittingQuestionId() !== null ||
+                  pollClosed() ||
+                  !(selectedOptions()[question.id]?.length)
+                "
                 (click)="submitQuestion(question)"
               >
                 Vote
@@ -56,7 +73,12 @@
           }
         </div>
 
-        <button class="btn survey__complete" type="button" (click)="completeSurvey()">
+        <button
+          class="btn survey__complete"
+          type="button"
+          [disabled]="submittingQuestionId() !== null || pollClosed()"
+          (click)="completeSurvey()"
+        >
           Complete survey
         </button>
       </section>

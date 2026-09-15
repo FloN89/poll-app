@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
 
   readonly polls = signal<Poll[]>([]);
   readonly loading = signal(true);
+  readonly errorMessage = signal('');
   readonly modalOpen = signal(false);
   readonly selectedTab = signal<'active' | 'past'>('active');
   readonly selectedCategory = signal<PollCategory | 'all'>('all');
@@ -45,9 +46,11 @@ export class HomeComponent implements OnInit {
   async loadPolls(): Promise<void> {
     try {
       this.loading.set(true);
+      this.errorMessage.set('');
       this.polls.set(await this.pollService.getPolls());
     } catch (error) {
       console.error(error);
+      this.errorMessage.set('Surveys could not be loaded. Please try again.');
     } finally {
       this.loading.set(false);
     }

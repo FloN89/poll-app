@@ -17,7 +17,7 @@
     </div>
 
     <div class="hero__image">
-      <img src="/img/hero-illustration.png" alt="" />
+      <img src="/assets/big_logo.png" alt="" />
     </div>
   </div>
 </section>
@@ -81,6 +81,11 @@
 
     @if (loading()) {
       <p class="state">Loading surveys...</p>
+    } @else if (errorMessage()) {
+      <p class="state" role="alert">
+        {{ errorMessage() }}
+        <button class="link-btn" type="button" (click)="loadPolls()">Try again</button>
+      </p>
     } @else {
       <div class="poll-grid">
         @for (poll of filteredPolls(); track poll.id) {

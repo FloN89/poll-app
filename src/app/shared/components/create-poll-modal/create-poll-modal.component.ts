@@ -30,6 +30,7 @@ export class CreatePollModalComponent {
 
   readonly categories = POLL_CATEGORIES;
   isSaving = false;
+  saveError = '';
 
   readonly form = this.formBuilder.group({
     status: this.formBuilder.control<PollStatus>('draft', { nonNullable: true }),
@@ -104,6 +105,7 @@ export class CreatePollModalComponent {
     if (!this.prepareSubmission(status)) return;
 
     this.isSaving = true;
+    this.saveError = '';
 
     try {
       await this.savePoll(status);
@@ -170,7 +172,7 @@ export class CreatePollModalComponent {
    */
   private handleSaveError(error: unknown): void {
     console.error(error);
-    alert('Survey could not be saved.');
+    this.saveError = 'Survey could not be saved. Please try again.';
   }
 
   /**
@@ -193,7 +195,7 @@ export class CreatePollModalComponent {
   private createRequiredTextControl(value: string) {
     return this.formBuilder.control(value, {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.pattern(/\S/)],
     });
   }
 }

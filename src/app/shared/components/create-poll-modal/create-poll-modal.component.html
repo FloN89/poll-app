@@ -110,6 +110,9 @@
     </form>
 
     <div class="modal__actions">
+      @if (saveError) {
+        <p class="modal__error" role="alert">{{ saveError }}</p>
+      }
       <button
         class="btn btn--ghost"
         type="button"

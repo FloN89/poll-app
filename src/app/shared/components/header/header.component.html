@@ -1,6 +1,9 @@
 <header class="header" [class.header--light]="light">
   <a class="header__logo" routerLink="/">
-    <img src="/img/logo.svg" alt="Poll App" />
+    <img
+      [src]="light ? '/assets/poll_app_logo_dark.png' : '/assets/poll_app_logo_light.png'"
+      alt="Poll App"
+    />
     <span>Poll<br />App</span>
   </a>
 

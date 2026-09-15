@@ -2,7 +2,12 @@ import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { Poll, PollQuestion, formatDeadline } from '../../core/models/poll.model';
+import {
+  Poll,
+  PollQuestion,
+  formatDeadline,
+  isPollPast,
+} from '../../core/models/poll.model';
 import { PollService } from '../../core/services/poll.service';
 
 @Component({
@@ -18,6 +23,8 @@ export class PollDetailComponent implements OnInit, OnDestroy {
 
   readonly poll = signal<Poll | null>(null);
   readonly loading = signal(true);
+  readonly errorMessage = signal('');
+  readonly submittingQuestionId = signal<string | null>(null);
   readonly selectedOptions = signal<Record<string, string[]>>({});
   readonly submittedQuestions = signal<Record<string, boolean>>({});
 
@@ -28,6 +35,13 @@ export class PollDetailComponent implements OnInit, OnDestroy {
 
     return currentPoll ? formatDeadline(currentPoll.deadline) : '';
   });
+  readonly pollClosed = computed(() => isPollPast(this.poll()?.deadline ?? null));
+
+  async retryLoad(): Promise<void> {
+    const pollId = this.route.snapshot.paramMap.get('id');
+
+    if (pollId) await this.loadPoll(pollId);
+  }
 
   /**
    * Loads the current poll and starts the live vote subscription.
@@ -35,10 +49,13 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     const pollId = this.route.snapshot.paramMap.get('id');
 
-    if (!pollId) return;
+    if (!pollId || !this.isUuid(pollId)) {
+      this.loading.set(false);
+      return;
+    }
 
     await this.loadPoll(pollId);
-    this.voteChannel = this.createVoteSubscription(pollId);
+    if (this.poll()) this.voteChannel = this.createVoteSubscription(pollId);
   }
 
   /**
@@ -56,9 +73,11 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   async loadPoll(pollId: string, withSelections = true): Promise<void> {
     try {
       this.loading.set(true);
+      this.errorMessage.set('');
       await this.setLoadedPoll(pollId, withSelections);
     } catch (error) {
       console.error(error);
+      this.errorMessage.set('Survey could not be loaded. Please try again.');
     } finally {
       this.loading.set(false);
     }
@@ -96,11 +115,23 @@ export class PollDetailComponent implements OnInit, OnDestroy {
    */
   async submitQuestion(question: PollQuestion): Promise<void> {
     const currentPoll = this.poll();
+    const optionIds = this.selectedOptions()[question.id] ?? [];
 
-    if (!currentPoll) return;
+    if (!currentPoll || isPollPast(currentPoll.deadline) || optionIds.length === 0) {
+      return;
+    }
 
-    await this.saveQuestionVote(currentPoll.id, question);
-    await this.loadPoll(currentPoll.id, false);
+    try {
+      this.errorMessage.set('');
+      this.submittingQuestionId.set(question.id);
+      await this.saveQuestionVote(currentPoll.id, question);
+      await this.loadPoll(currentPoll.id, false);
+    } catch (error) {
+      console.error(error);
+      this.errorMessage.set('Your vote could not be saved. Please try again.');
+    } finally {
+      this.submittingQuestionId.set(null);
+    }
   }
 
   /**
@@ -109,10 +140,16 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   async completeSurvey(): Promise<void> {
     const currentPoll = this.poll();
 
-    if (!currentPoll) return;
+    if (!currentPoll || isPollPast(currentPoll.deadline)) return;
 
-    await this.submitMissingQuestions(currentPoll);
-    alert('Thank you for participating!');
+    try {
+      this.errorMessage.set('');
+      await this.submitMissingQuestions(currentPoll);
+      alert('Thank you for participating!');
+    } catch (error) {
+      console.error(error);
+      this.errorMessage.set('Your votes could not be saved. Please try again.');
+    }
   }
 
   /**
@@ -206,9 +243,17 @@ export class PollDetailComponent implements OnInit, OnDestroy {
    */
   private async submitMissingQuestions(currentPoll: Poll): Promise<void> {
     for (const question of currentPoll.questions) {
-      if (!this.submittedQuestions()[question.id]) {
+      const hasSelection = (this.selectedOptions()[question.id]?.length ?? 0) > 0;
+
+      if (!this.submittedQuestions()[question.id] && hasSelection) {
         await this.saveQuestionVote(currentPoll.id, question);
       }
     }
+  }
+
+  private isUuid(value: string): boolean {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      value
+    );
   }
 }

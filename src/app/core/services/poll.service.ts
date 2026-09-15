@@ -66,13 +66,14 @@ export class PollService {
    * Creates a poll with all related questions and answer options.
    */
   async createPoll(payload: CreatePollPayload): Promise<string> {
-    const poll = await this.insertPoll(payload);
+    const { data, error } = await this.supabase.rpc('create_poll', {
+      payload,
+    });
 
-    for (const [index, question] of payload.questions.entries()) {
-      await this.createQuestionWithOptions(poll.id, question, index);
-    }
+    if (error) throw error;
+    if (typeof data !== 'string') throw new Error('Supabase returned no poll ID.');
 
-    return poll.id;
+    return data;
   }
 
   /**
@@ -83,13 +84,14 @@ export class PollService {
     questionId: string,
     optionIds: string[]
   ): Promise<void> {
-    const voterId = this.getVoterId();
-    const rows = this.buildVoteRows(pollId, questionId, optionIds, voterId);
+    const { error } = await this.supabase.rpc('replace_votes', {
+      target_poll_id: pollId,
+      target_question_id: questionId,
+      target_option_ids: [...new Set(optionIds)],
+      target_voter_id: this.getVoterId(),
+    });
 
-    await this.deletePreviousVotes(questionId, voterId);
-    if (rows.length === 0) return;
-
-    await this.insertVotes(rows);
+    if (error) throw error;
   }
 
   /**
@@ -202,28 +204,6 @@ export class PollService {
   /**
    * Inserts the prepared vote rows into Supabase.
    */
-  private async insertVotes(rows: Omit<VoteRow, 'id' | 'created_at'>[]): Promise<void> {
-    const { error } = await this.supabase.from('votes').insert(rows);
-
-    if (error) throw error;
-  }
-
-  /**
-   * Deletes old votes for the same question and browser user.
-   */
-  private async deletePreviousVotes(
-    questionId: string,
-    voterId: string
-  ): Promise<void> {
-    const { error } = await this.supabase
-      .from('votes')
-      .delete()
-      .eq('question_id', questionId)
-      .eq('voter_id', voterId);
-
-    if (error) throw error;
-  }
-
   /**
    * Adds questions, options, and vote results to raw poll rows.
    */
@@ -342,7 +322,8 @@ export class PollService {
    */
   private mapOptionWithVotes(option: OptionRow, votes: VoteRow[]): PollOption {
     const optionVotes = votes.filter((vote) => vote.option_id === option.id).length;
-    const percentage = this.calculatePercentage(optionVotes, votes.length);
+    const voterCount = new Set(votes.map((vote) => vote.voter_id)).size;
+    const percentage = this.calculatePercentage(optionVotes, voterCount);
 
     return { ...option, votes: optionVotes, percentage };
   }
@@ -417,23 +398,6 @@ export class PollService {
       text: option.trim(),
       position: index + 1,
     };
-  }
-
-  /**
-   * Builds all database rows for the selected vote options.
-   */
-  private buildVoteRows(
-    pollId: string,
-    questionId: string,
-    optionIds: string[],
-    voterId: string
-  ): Omit<VoteRow, 'id' | 'created_at'>[] {
-    return optionIds.map((optionId) => ({
-      poll_id: pollId,
-      question_id: questionId,
-      option_id: optionId,
-      voter_id: voterId,
-    }));
   }
 
   /**
