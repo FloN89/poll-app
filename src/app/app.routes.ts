@@ -1,15 +1,17 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './features/home/home.component';
-import { PollDetailComponent } from './features/poll-detail/poll-detail.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    loadComponent: () =>
+      import('./features/home/home.component').then(({ HomeComponent }) => HomeComponent),
   },
   {
     path: 'poll/:id',
-    component: PollDetailComponent,
+    loadComponent: () =>
+      import('./features/poll-detail/poll-detail.component').then(
+        ({ PollDetailComponent }) => PollDetailComponent,
+      ),
   },
   {
     path: '**',

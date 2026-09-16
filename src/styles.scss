@@ -82,7 +82,9 @@ a {
   color: #20152a;
   font-weight: 800;
   box-shadow: none;
-  transition: transform 160ms ease, filter 160ms ease;
+  transition:
+    transform 160ms ease,
+    filter 160ms ease;
 
   &:hover {
     transform: translateY(-1px);

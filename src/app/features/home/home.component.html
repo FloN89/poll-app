@@ -6,8 +6,8 @@
       <h1 class="display-title">Collect Feedback,<br />Unlock Ideas</h1>
 
       <p>
-        Create and share surveys in minutes – from team events to workplace
-        culture. Collect opinions, engage your audience, and turn feedback into action.
+        Create and share surveys in minutes – from team events to workplace culture. Collect
+        opinions, engage your audience, and turn feedback into action.
       </p>
 
       <button class="btn hero__btn" type="button" (click)="modalOpen.set(true)">
@@ -56,11 +56,7 @@
       </div>
 
       <div class="category">
-        <button
-          class="category__trigger"
-          type="button"
-          (click)="dropdownOpen.set(!dropdownOpen())"
-        >
+        <button class="category__trigger" type="button" (click)="dropdownOpen.set(!dropdownOpen())">
           Sort by categories
           <span [class.category__arrow--open]="dropdownOpen()" class="category__arrow"></span>
         </button>

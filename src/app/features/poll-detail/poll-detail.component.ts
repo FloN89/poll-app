@@ -3,12 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { CreatePollModalComponent } from '../../shared/components/create-poll-modal/create-poll-modal.component';
-import {
-  Poll,
-  PollQuestion,
-  formatDeadline,
-  isPollPast,
-} from '../../core/models/poll.model';
+import { Poll, PollQuestion, formatDeadline, isPollPast } from '../../core/models/poll.model';
 import { PollService } from '../../core/services/poll.service';
 
 @Component({
@@ -157,10 +152,7 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   /**
    * Loads one poll and updates the component signal.
    */
-  private async setLoadedPoll(
-    pollId: string,
-    withSelections: boolean
-  ): Promise<void> {
+  private async setLoadedPoll(pollId: string, withSelections: boolean): Promise<void> {
     const loadedPoll = await this.pollService.getPoll(pollId);
 
     this.poll.set(loadedPoll);
@@ -196,7 +188,7 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   private getNextSelectedOptions(
     question: PollQuestion,
     optionId: string,
-    currentOptions: string[]
+    currentOptions: string[],
   ): string[] {
     if (!question.allow_multiple) return [optionId];
 
@@ -206,10 +198,7 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   /**
    * Adds or removes one option in a multiple-choice question.
    */
-  private toggleMultipleOption(
-    optionId: string,
-    currentOptions: string[]
-  ): string[] {
+  private toggleMultipleOption(optionId: string, currentOptions: string[]): string[] {
     if (currentOptions.includes(optionId)) {
       return currentOptions.filter((currentOptionId) => currentOptionId !== optionId);
     }
@@ -220,10 +209,7 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   /**
    * Saves the vote for one question and marks it as submitted.
    */
-  private async saveQuestionVote(
-    pollId: string,
-    question: PollQuestion
-  ): Promise<void> {
+  private async saveQuestionVote(pollId: string, question: PollQuestion): Promise<void> {
     const optionIds = this.selectedOptions()[question.id] ?? [];
 
     await this.pollService.vote(pollId, question.id, optionIds);
@@ -254,8 +240,6 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   }
 
   private isUuid(value: string): boolean {
-    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-      value
-    );
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
   }
 }

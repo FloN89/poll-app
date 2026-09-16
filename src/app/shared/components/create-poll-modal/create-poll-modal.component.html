@@ -12,33 +12,40 @@
     <h2 class="display-title">Create new survey</h2>
 
     <form class="modal__form" [formGroup]="form">
+      <p class="form-hint"><span aria-hidden="true">*</span> Required fields</p>
+
       <div class="modal__grid">
         <div class="field">
-          <label for="title">Survey name</label>
-          <input id="title" class="input" type="text" formControlName="title" />
+          <label for="title">Survey name <span class="required" aria-hidden="true">*</span></label>
+          <input
+            id="title"
+            class="input"
+            type="text"
+            formControlName="title"
+            required
+            [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid"
+            aria-describedby="title-error"
+          />
+          @if (form.controls.title.touched && form.controls.title.invalid) {
+            <p id="title-error" class="field-error">Please enter a survey name.</p>
+          }
         </div>
 
         <div class="field field--text">
-          <label for="description">
-            Describing text <span>(optional)</span>
-          </label>
-          <textarea
-            id="description"
-            class="textarea"
-            formControlName="description"
-          ></textarea>
+          <label for="description"> Describing text <span>(optional)</span> </label>
+          <textarea id="description" class="textarea" formControlName="description"></textarea>
         </div>
 
         <div class="field">
-          <label for="deadline">
-            Set end date <span>(optional)</span>
-          </label>
+          <label for="deadline"> Set end date <span>(optional)</span> </label>
           <input id="deadline" class="input" type="date" formControlName="deadline" />
         </div>
 
         <div class="field">
-          <label for="category">Choose category</label>
-          <select id="category" class="input" formControlName="category">
+          <label for="category">
+            Choose category <span class="required" aria-hidden="true">*</span>
+          </label>
+          <select id="category" class="input" formControlName="category" required>
             @for (category of categories; track category) {
               <option [value]="category">{{ category }}</option>
             }
@@ -50,7 +57,10 @@
         @for (question of questions.controls; track question; let questionIndex = $index) {
           <section class="question" [formGroupName]="questionIndex">
             <div class="question__head">
-              <label>{{ questionIndex + 1 }}. Question</label>
+              <label [for]="'question-' + questionIndex">
+                {{ questionIndex + 1 }}. Question
+                <span class="required" aria-hidden="true">*</span>
+              </label>
 
               <button
                 class="icon-btn"
@@ -62,14 +72,27 @@
               </button>
             </div>
 
-            <input class="input" type="text" formControlName="title" />
+            <input
+              class="input"
+              type="text"
+              formControlName="title"
+              required
+              [id]="'question-' + questionIndex"
+              [attr.aria-invalid]="question.get('title')?.touched && question.get('title')?.invalid"
+              [attr.aria-describedby]="'question-' + questionIndex + '-error'"
+            />
+            @if (question.get('title')?.touched && question.get('title')?.invalid) {
+              <p [id]="'question-' + questionIndex + '-error'" class="field-error">
+                Please enter a question.
+              </p>
+            }
 
             <label class="check">
               <input type="checkbox" formControlName="allowMultiple" />
               <span>Allow multiple answers.</span>
             </label>
 
-            <h4>Answers</h4>
+            <h4>Answers <span class="required" aria-hidden="true">*</span></h4>
 
             <div class="options" formArrayName="options">
               @for (
@@ -78,8 +101,30 @@
                 let optionIndex = $index
               ) {
                 <div class="option">
-                  <span>{{ optionLetter(optionIndex) }}.</span>
-                  <input class="input" type="text" [formControlName]="optionIndex" />
+                  <label [for]="'option-' + questionIndex + '-' + optionIndex">
+                    {{ optionLetter(optionIndex) }}.
+                  </label>
+                  <div>
+                    <input
+                      class="input"
+                      type="text"
+                      required
+                      [id]="'option-' + questionIndex + '-' + optionIndex"
+                      [formControlName]="optionIndex"
+                      [attr.aria-invalid]="option.touched && option.invalid"
+                      [attr.aria-describedby]="
+                        'option-' + questionIndex + '-' + optionIndex + '-error'
+                      "
+                    />
+                    @if (option.touched && option.invalid) {
+                      <p
+                        [id]="'option-' + questionIndex + '-' + optionIndex + '-error'"
+                        class="field-error"
+                      >
+                        Please enter an answer.
+                      </p>
+                    }
+                  </div>
 
                   <button
                     class="icon-btn"
@@ -93,11 +138,7 @@
               }
             </div>
 
-            <button
-              class="link-btn"
-              type="button"
-              (click)="addOption(questionIndex)"
-            >
+            <button class="link-btn" type="button" (click)="addOption(questionIndex)">
               Add answer ⊕
             </button>
           </section>
@@ -113,12 +154,7 @@
       @if (saveError) {
         <p class="modal__error" role="alert">{{ saveError }}</p>
       }
-      <button
-        class="btn"
-        type="button"
-        [disabled]="isSaving"
-        (click)="submit('published')"
-      >
+      <button class="btn" type="button" [disabled]="isSaving" (click)="submit('published')">
         Publish
       </button>
     </div>

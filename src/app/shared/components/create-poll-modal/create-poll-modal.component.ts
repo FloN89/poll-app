@@ -1,10 +1,5 @@
 import { Component, EventEmitter, Output, inject } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   CreatePollPayload,
@@ -39,6 +34,7 @@ export class CreatePollModalComponent {
     deadline: this.formBuilder.control<string | null>(null),
     category: this.formBuilder.control<PollCategory>('Team activities', {
       nonNullable: true,
+      validators: [Validators.required],
     }),
     questions: this.formBuilder.array([this.createQuestionGroup()]),
   });
@@ -120,10 +116,17 @@ export class CreatePollModalComponent {
    * Sets the requested status and checks whether the form is ready to save.
    */
   private prepareSubmission(status: PollStatus): boolean {
+    if (this.isSaving) return false;
+
     this.form.controls.status.setValue(status);
     this.form.markAllAsTouched();
 
-    return this.form.valid && !this.isSaving;
+    if (this.form.invalid) {
+      this.saveError = 'Please complete all required fields.';
+      return false;
+    }
+
+    return true;
   }
 
   /**

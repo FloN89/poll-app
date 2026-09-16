@@ -7,7 +7,9 @@
   background: var(--card);
   color: white;
   border-radius: 6px 52px 6px 6px;
-  transition: transform 160ms ease, background 160ms ease;
+  transition:
+    transform 160ms ease,
+    background 160ms ease;
 
   &:hover {
     transform: translateY(-2px);

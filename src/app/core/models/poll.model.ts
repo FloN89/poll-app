@@ -75,6 +75,8 @@ export interface CreatePollPayload {
 export const POLL_CATEGORIES: PollCategory[] = [
   'Team activities',
   'Health & Wellness',
+  'Healthy Lifestyle',
+  'Gaming',
   'Gaming & Entertainment',
   'Education & Learning',
   'Lifestyle & Personal',
@@ -88,10 +90,12 @@ export function getDaysLeft(deadline: string | null): number | null {
   if (!deadline) return null;
 
   const today = new Date();
-  const endDate = new Date(`${deadline}T23:59:59`);
-  const difference = endDate.getTime() - today.getTime();
+  const [year, month, day] = deadline.split('-').map(Number);
+  const todayDate = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+  const deadlineDate = Date.UTC(year, month - 1, day);
+  const difference = deadlineDate - todayDate;
 
-  return Math.max(0, Math.ceil(difference / (1000 * 60 * 60 * 24)));
+  return Math.max(0, Math.round(difference / (1000 * 60 * 60 * 24)));
 }
 
 /**

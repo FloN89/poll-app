@@ -1,18 +1,12 @@
 <div class="detail-page">
-  <app-header
-    [light]="true"
-    [showCreateButton]="true"
-    (createClicked)="modalOpen.set(true)"
-  />
+  <app-header [light]="true" [showCreateButton]="true" (createClicked)="modalOpen.set(true)" />
 
   @if (loading() && !poll()) {
     <p class="detail-page__state">Loading survey...</p>
   } @else if (errorMessage() && !poll()) {
     <p class="detail-page__state" role="alert">
       {{ errorMessage() }}
-      <button class="link-btn" type="button" (click)="retryLoad()">
-        Try again
-      </button>
+      <button class="link-btn" type="button" (click)="retryLoad()">Try again</button>
     </p>
   } @else if (poll()) {
     <main class="detail page-shell">
@@ -54,9 +48,7 @@
                       (change)="toggleOption(question, option.id)"
                     />
 
-                    <span>
-                      {{ optionLetter(optionIndex) }}. {{ option.text }}
-                    </span>
+                    <span> {{ optionLetter(optionIndex) }}. {{ option.text }} </span>
                   </label>
                 }
               </div>
@@ -67,7 +59,7 @@
                 [disabled]="
                   submittingQuestionId() !== null ||
                   pollClosed() ||
-                  !(selectedOptions()[question.id]?.length)
+                  !selectedOptions()[question.id]?.length
                 "
                 (click)="submitQuestion(question)"
               >

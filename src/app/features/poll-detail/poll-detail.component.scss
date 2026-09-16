@@ -180,10 +180,14 @@
 @media (max-width: 700px) {
   .detail {
     width: 100%;
+    min-width: 0;
+    overflow: hidden;
     padding-bottom: 0;
   }
 
   .survey {
+    width: 100%;
+    min-width: 0;
     border-radius: 0 72px 0 0;
     padding: 28px 18px 110px;
 
@@ -199,8 +203,23 @@
   }
 
   .question-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 36px;
+  }
+
+  .question,
+  .results,
+  .result {
+    min-width: 0;
+  }
+
+  .survey h1,
+  .survey__description,
+  .question h2,
+  .answer span,
+  .result h3 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .results {

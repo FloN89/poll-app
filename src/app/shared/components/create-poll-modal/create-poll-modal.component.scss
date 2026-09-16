@@ -84,6 +84,28 @@
   margin-top: 60px;
 }
 
+.form-hint {
+  margin: 0 0 18px;
+  color: var(--cream);
+  font-size: 14px;
+}
+
+.required {
+  color: var(--accent-2);
+  font-weight: 900;
+}
+
+.field-error {
+  margin: 5px 0 0;
+  color: #ffd6cc;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.input.ng-invalid.ng-touched {
+  box-shadow: 0 0 0 3px rgba(255, 126, 106, 0.7);
+}
+
 .question {
   margin-bottom: 42px;
 
@@ -125,7 +147,8 @@
   gap: 6px;
   margin-bottom: 8px;
 
-  span {
+  > span,
+  > label {
     font-weight: 900;
     font-size: 20px;
   }
