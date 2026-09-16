@@ -1,4 +1,6 @@
 .detail-page {
+  width: min(1440px, 100%);
+  margin-inline: auto;
   min-height: 100vh;
   background: #fbfafc;
   color: var(--dark-text);
@@ -13,9 +15,9 @@
 .detail {
   display: grid;
   grid-template-columns: minmax(0, 700px) 1fr;
-  gap: 44px;
+  gap: 42px;
   align-items: start;
-  padding-bottom: 80px;
+  padding-bottom: 44px;
 }
 
 .survey {
@@ -40,13 +42,13 @@
   h1 {
     margin: 0 0 12px;
     max-width: 610px;
-    font-size: clamp(42px, 4.5vw, 66px);
+    font-size: 48px;
   }
 
   &__description {
     max-width: 620px;
     margin: 0 0 38px;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.35;
   }
 
@@ -60,7 +62,7 @@
 .question-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 48px 58px;
+  gap: 48px 46px;
   padding-bottom: 86px;
 }
 
@@ -79,7 +81,7 @@
   }
 
   .btn {
-    margin-top: 14px;
+    display: none;
   }
 }
 

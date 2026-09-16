@@ -3,7 +3,10 @@
   inset: 0;
   z-index: 100;
   overflow: auto;
-  background: rgba(255, 255, 255, 0.94);
+  left: 50%;
+  width: min(1440px, 100%);
+  transform: translateX(-50%);
+  background: #fbfafc;
   padding: 72px 24px;
 }
 
@@ -24,6 +27,9 @@
   }
 
   &__close {
+    position: absolute;
+    top: 87px;
+    right: 54px;
     gap: 12px;
     border-radius: 9px;
   }
@@ -35,7 +41,7 @@
 
   &__form {
     position: relative;
-    min-height: 390px;
+    min-height: 548px;
     padding: 38px 34px;
     background: var(--bg-2);
     border-radius: 4px 76px 4px 4px;
@@ -170,6 +176,10 @@
 
     &__actions {
       margin-top: 26px;
+    }
+
+    &__close {
+      position: static;
     }
   }
 

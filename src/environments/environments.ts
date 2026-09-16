@@ -1,4 +1,4 @@
 export const environment = {
-  supabaseUrl: 'https://qjntkpklkyodbigiwlob.supabase.co',
-  supabaseAnonKey: 'dein-anon-public-key',
+  supabaseUrl: 'https://iislmqtjkslssqzumsdb.supabase.co',
+  supabaseAnonKey: 'sb_publishable_ZU22UQILTr6-ZAzI2MUq0g_ehJLI9PZ',
 };

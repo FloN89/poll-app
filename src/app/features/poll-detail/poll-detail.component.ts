@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { CreatePollModalComponent } from '../../shared/components/create-poll-modal/create-poll-modal.component';
 import {
   Poll,
   PollQuestion,
@@ -13,7 +14,7 @@ import { PollService } from '../../core/services/poll.service';
 @Component({
   selector: 'app-poll-detail',
   standalone: true,
-  imports: [HeaderComponent, RouterLink],
+  imports: [HeaderComponent, RouterLink, CreatePollModalComponent],
   templateUrl: './poll-detail.component.html',
   styleUrl: './poll-detail.component.scss',
 })
@@ -23,6 +24,7 @@ export class PollDetailComponent implements OnInit, OnDestroy {
 
   readonly poll = signal<Poll | null>(null);
   readonly loading = signal(true);
+  readonly modalOpen = signal(false);
   readonly errorMessage = signal('');
   readonly submittingQuestionId = signal<string | null>(null);
   readonly selectedOptions = signal<Record<string, string[]>>({});

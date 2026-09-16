@@ -1,5 +1,9 @@
 <div class="detail-page">
-  <app-header [light]="true" />
+  <app-header
+    [light]="true"
+    [showCreateButton]="true"
+    (createClicked)="modalOpen.set(true)"
+  />
 
   @if (loading() && !poll()) {
     <p class="detail-page__state">Loading survey...</p>
@@ -115,3 +119,7 @@
     </p>
   }
 </div>
+
+@if (modalOpen()) {
+  <app-create-poll-modal (closed)="modalOpen.set(false)" />
+}
