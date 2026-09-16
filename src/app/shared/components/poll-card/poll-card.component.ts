@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Poll, getDaysLeft } from '../../../core/models/poll.model';
+import { Poll, formatDeadline, getDaysLeft, isPollPast } from '../../../core/models/poll.model';
 
 @Component({
   selector: 'app-poll-card',
@@ -17,6 +17,10 @@ export class PollCardComponent {
    * Returns a readable deadline label for the poll card.
    */
   daysLeft(): string {
+    if (isPollPast(this.poll.deadline)) {
+      return `Ended on ${formatDeadline(this.poll.deadline)}`;
+    }
+
     const days = getDaysLeft(this.poll.deadline);
 
     if (days === null) return 'No deadline';

@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:ftp": "ng build && node scripts/prepare-ftp.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:poll-app": "node dist/poll-app/server/server.mjs"
