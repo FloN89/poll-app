@@ -3,7 +3,6 @@
   inset: 0;
   z-index: 100;
   overflow: auto;
-  width: 100%;
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(2px);
   padding: 72px 24px;
@@ -16,7 +15,6 @@
   margin: 0 auto;
   padding: 40px 60px;
   background: var(--bg);
-  color: white;
   border-radius: 4px 96px 4px 4px;
 
   &__top {
@@ -102,6 +100,48 @@
   align-items: start;
 }
 
+.category-select {
+  position: relative;
+  margin-top: 27px;
+
+  select {
+    width: 100%;
+    padding: 5px 28px 5px 10px;
+    appearance: none;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+
+    &:focus,
+    &:focus-visible,
+    &:active {
+      outline: none;
+      background: transparent;
+    }
+
+    option {
+      background: var(--bg-2);
+      color: var(--text);
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 0;
+    height: 0;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-top: 8px solid white;
+    transform: translateY(-35%);
+    pointer-events: none;
+  }
+}
+
 .questions {
   width: min(430px, 100%);
   margin-top: 60px;
@@ -116,13 +156,6 @@
 .required {
   color: var(--accent-2);
   font-weight: 900;
-}
-
-.field-error {
-  margin: 5px 0 0;
-  color: #ffd6cc;
-  font-size: 13px;
-  font-weight: 700;
 }
 
 .input.ng-invalid.ng-touched {
@@ -160,6 +193,7 @@
   input {
     width: 16px;
     height: 16px;
+    accent-color: var(--accent-2);
   }
 }
 
@@ -291,5 +325,9 @@
 @media (max-width: 600px) {
   .field-pair {
     grid-template-columns: 1fr;
+  }
+
+  .category-select {
+    margin-top: 0;
   }
 }

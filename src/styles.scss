@@ -164,6 +164,20 @@ select {
   }
 }
 
+.field-error {
+  min-height: 16px;
+  margin: 5px 0 0;
+  color: #ffd6cc;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+  visibility: hidden;
+
+  &--visible {
+    visibility: visible;
+  }
+}
+
 .input,
 .textarea {
   width: 100%;
@@ -204,6 +218,15 @@ select {
 .textarea {
   min-height: 110px;
   resize: vertical;
+}
+
+select.input,
+input[type='date'].input {
+  &:focus,
+  &:focus-visible,
+  &:active {
+    background-color: #fbfafc;
+  }
 }
 
 @media (max-width: 760px) {

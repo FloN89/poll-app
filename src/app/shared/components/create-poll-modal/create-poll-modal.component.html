@@ -41,9 +41,15 @@
                 <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
               </button>
             </div>
-            @if (form.controls.title.touched && form.controls.title.invalid) {
-              <p id="title-error" class="field-error">Please enter a survey name.</p>
-            }
+            <p
+              id="title-error"
+              class="field-error"
+              [class.field-error--visible]="
+                form.controls.title.touched && form.controls.title.invalid
+              "
+            >
+              Please enter a survey name.
+            </p>
           </div>
 
           <div class="field-pair">
@@ -71,20 +77,32 @@
                   <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
                 </button>
               </div>
-              @if (form.controls.deadline.touched && form.controls.deadline.hasError('pastDate')) {
-                <p id="deadline-error" class="field-error">Please select today or a future date.</p>
-              }
+              <p
+                id="deadline-error"
+                class="field-error"
+                [class.field-error--visible]="
+                  form.controls.deadline.touched && form.controls.deadline.hasError('pastDate')
+                "
+              >
+                Please select today or a future date.
+              </p>
             </div>
 
             <div class="field">
-              <label for="category">
-                Choose category <span class="required" aria-hidden="true">*</span>
-              </label>
-              <select id="category" class="input" formControlName="category" required>
-                @for (category of categories; track category) {
-                  <option [value]="category">{{ category }}</option>
-                }
-              </select>
+              <div class="category-select">
+                <select
+                  id="category"
+                  formControlName="category"
+                  aria-label="Choose category"
+                  required
+                >
+                  <option value="" disabled>Choose category</option>
+                  @for (category of categories; track category) {
+                    <option [value]="category">{{ category }}</option>
+                  }
+                </select>
+                <span class="category-select__arrow" aria-hidden="true"></span>
+              </div>
             </div>
           </div>
         </div>
@@ -141,11 +159,15 @@
               [attr.aria-invalid]="question.get('title')?.touched && question.get('title')?.invalid"
               [attr.aria-describedby]="'question-' + questionIndex + '-error'"
             />
-            @if (question.get('title')?.touched && question.get('title')?.invalid) {
-              <p [id]="'question-' + questionIndex + '-error'" class="field-error">
-                Please enter a question.
-              </p>
-            }
+            <p
+              [id]="'question-' + questionIndex + '-error'"
+              class="field-error"
+              [class.field-error--visible]="
+                question.get('title')?.touched && question.get('title')?.invalid
+              "
+            >
+              Please enter a question.
+            </p>
 
             <label class="check">
               <input type="checkbox" formControlName="allowMultiple" />
@@ -177,14 +199,13 @@
                         'option-' + questionIndex + '-' + optionIndex + '-error'
                       "
                     />
-                    @if (option.touched && option.invalid) {
-                      <p
-                        [id]="'option-' + questionIndex + '-' + optionIndex + '-error'"
-                        class="field-error"
-                      >
-                        Please enter an answer.
-                      </p>
-                    }
+                    <p
+                      [id]="'option-' + questionIndex + '-' + optionIndex + '-error'"
+                      class="field-error"
+                      [class.field-error--visible]="option.touched && option.invalid"
+                    >
+                      Please enter an answer.
+                    </p>
                   </div>
 
                   <button

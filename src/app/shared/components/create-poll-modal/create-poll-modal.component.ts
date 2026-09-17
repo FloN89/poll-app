@@ -55,7 +55,7 @@ export class CreatePollModalComponent {
     title: this.createRequiredTextControl(''),
     description: this.formBuilder.control('', { nonNullable: true }),
     deadline: this.formBuilder.control<string | null>(null, [futureDateValidator]),
-    category: this.formBuilder.control<PollCategory>('Team activities', {
+    category: this.formBuilder.control<PollCategory | ''>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -174,7 +174,7 @@ export class CreatePollModalComponent {
     return {
       title: rawValue.title.trim(),
       description: rawValue.description.trim(),
-      category: rawValue.category,
+      category: rawValue.category as PollCategory,
       deadline: rawValue.deadline,
       status: rawValue.status,
       questions: this.buildQuestionPayloads(rawValue.questions),
