@@ -49,8 +49,13 @@
   &__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px 70px;
+    gap: 70px;
     align-items: start;
+  }
+
+  &__details {
+    display: grid;
+    gap: 10px;
   }
 
   &__actions {
@@ -88,10 +93,13 @@
       font-weight: 400;
     }
   }
+}
 
-  &--text {
-    grid-row: span 2;
-  }
+.field-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
 }
 
 .questions {
@@ -277,5 +285,11 @@
   .add-question {
     position: static;
     margin-top: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .field-pair {
+    grid-template-columns: 1fr;
   }
 }

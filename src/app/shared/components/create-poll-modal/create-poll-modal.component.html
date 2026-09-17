@@ -15,32 +15,78 @@
       <p class="form-hint"><span aria-hidden="true">*</span> Required fields</p>
 
       <div class="modal__grid">
-        <div class="field">
-          <label for="title">Survey name <span class="required" aria-hidden="true">*</span></label>
-          <div class="field__control-row">
-            <input
-              id="title"
-              class="input"
-              type="text"
-              formControlName="title"
-              placeholder="Enter survey name"
-              required
-              [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid"
-              aria-describedby="title-error"
-            />
-            <button
-              class="icon-btn"
-              type="button"
-              title="Clear survey name"
-              aria-label="Clear survey name"
-              (click)="form.controls.title.setValue('')"
+        <div class="modal__details">
+          <div class="field">
+            <label for="title"
+              >Survey name <span class="required" aria-hidden="true">*</span></label
             >
-              <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
-            </button>
+            <div class="field__control-row">
+              <input
+                id="title"
+                class="input"
+                type="text"
+                formControlName="title"
+                placeholder="Enter survey name"
+                required
+                [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid"
+                aria-describedby="title-error"
+              />
+              <button
+                class="icon-btn"
+                type="button"
+                title="Clear survey name"
+                aria-label="Clear survey name"
+                (click)="form.controls.title.setValue('')"
+              >
+                <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
+              </button>
+            </div>
+            @if (form.controls.title.touched && form.controls.title.invalid) {
+              <p id="title-error" class="field-error">Please enter a survey name.</p>
+            }
           </div>
-          @if (form.controls.title.touched && form.controls.title.invalid) {
-            <p id="title-error" class="field-error">Please enter a survey name.</p>
-          }
+
+          <div class="field-pair">
+            <div class="field">
+              <label for="deadline"> Set end date <span>(optional)</span> </label>
+              <div class="field__control-row">
+                <input
+                  id="deadline"
+                  class="input"
+                  type="date"
+                  formControlName="deadline"
+                  [min]="minimumDeadline"
+                  [attr.aria-invalid]="
+                    form.controls.deadline.touched && form.controls.deadline.invalid
+                  "
+                  aria-describedby="deadline-error"
+                />
+                <button
+                  class="icon-btn"
+                  type="button"
+                  title="Clear end date"
+                  aria-label="Clear end date"
+                  (click)="form.controls.deadline.setValue(null)"
+                >
+                  <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
+                </button>
+              </div>
+              @if (form.controls.deadline.touched && form.controls.deadline.hasError('pastDate')) {
+                <p id="deadline-error" class="field-error">Please select today or a future date.</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="category">
+                Choose category <span class="required" aria-hidden="true">*</span>
+              </label>
+              <select id="category" class="input" formControlName="category" required>
+                @for (category of categories; track category) {
+                  <option [value]="category">{{ category }}</option>
+                }
+              </select>
+            </div>
+          </div>
         </div>
 
         <div class="field field--text">
@@ -62,44 +108,6 @@
               <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
             </button>
           </div>
-        </div>
-
-        <div class="field">
-          <label for="deadline"> Set end date <span>(optional)</span> </label>
-          <div class="field__control-row">
-            <input
-              id="deadline"
-              class="input"
-              type="date"
-              formControlName="deadline"
-              [min]="minimumDeadline"
-              [attr.aria-invalid]="form.controls.deadline.touched && form.controls.deadline.invalid"
-              aria-describedby="deadline-error"
-            />
-            <button
-              class="icon-btn"
-              type="button"
-              title="Clear end date"
-              aria-label="Clear end date"
-              (click)="form.controls.deadline.setValue(null)"
-            >
-              <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
-            </button>
-          </div>
-          @if (form.controls.deadline.touched && form.controls.deadline.hasError('pastDate')) {
-            <p id="deadline-error" class="field-error">Please select today or a future date.</p>
-          }
-        </div>
-
-        <div class="field">
-          <label for="category">
-            Choose category <span class="required" aria-hidden="true">*</span>
-          </label>
-          <select id="category" class="input" formControlName="category" required>
-            @for (category of categories; track category) {
-              <option [value]="category">{{ category }}</option>
-            }
-          </select>
         </div>
       </div>
 
