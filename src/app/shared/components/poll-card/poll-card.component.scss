@@ -67,6 +67,11 @@
     min-height: 147px;
     border-radius: 6px 48px 6px 6px;
 
+    &__badge {
+      position: static;
+      margin-top: 16px;
+    }
+
     &--large {
       width: 250px;
       min-height: 232px;

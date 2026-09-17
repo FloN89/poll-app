@@ -155,8 +155,8 @@ export class CreatePollModalComponent {
   private async savePoll(): Promise<void> {
     const payload = this.buildPayload();
     await this.pollService.createPoll(payload);
-    this.notification.show('Survey published successfully.');
     await this.router.navigate(['/']);
+    this.notification.show('Survey published successfully.');
     this.closed.emit();
   }
 

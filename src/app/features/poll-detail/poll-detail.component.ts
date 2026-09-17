@@ -163,8 +163,8 @@ export class PollDetailComponent implements OnInit, OnDestroy {
     try {
       this.errorMessage.set('');
       await this.submitMissingQuestions(currentPoll);
-      this.notification.show('Thank you for participating!');
       await this.router.navigate(['/']);
+      this.notification.show('Thank you for participating!');
     } catch (error) {
       console.error(error);
       this.errorMessage.set('Your votes could not be saved. Please try again.');
