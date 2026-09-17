@@ -118,7 +118,13 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   /**
    * Toggles one option depending on the question selection type.
    */
-  toggleOption(question: PollQuestion, optionId: string): void {
+  async toggleOption(question: PollQuestion, optionId: string): Promise<void> {
+    const currentPoll = this.poll();
+
+    if (!currentPoll || isPollPast(currentPoll.deadline) || this.submittingQuestionId() !== null) {
+      return;
+    }
+
     const currentOptions = this.selectedOptions()[question.id] ?? [];
     const nextOptions = this.getNextSelectedOptions(question, optionId, currentOptions);
 
@@ -126,6 +132,22 @@ export class PollDetailComponent implements OnInit, OnDestroy {
       ...this.selectedOptions(),
       [question.id]: nextOptions,
     });
+
+    try {
+      this.errorMessage.set('');
+      this.submittingQuestionId.set(question.id);
+      await this.saveQuestionVote(currentPoll.id, question);
+      await this.loadPoll(currentPoll.id, false);
+    } catch (error) {
+      console.error(error);
+      this.selectedOptions.set({
+        ...this.selectedOptions(),
+        [question.id]: currentOptions,
+      });
+      this.errorMessage.set('The live preview could not be updated. Please try again.');
+    } finally {
+      this.submittingQuestionId.set(null);
+    }
   }
 
   /**
