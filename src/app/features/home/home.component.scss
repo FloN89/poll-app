@@ -40,6 +40,10 @@
     display: none;
   }
 
+  &__btn:hover &__plus {
+    display: inline;
+  }
+
   &__image {
     display: flex;
     justify-content: center;
@@ -104,6 +108,10 @@
     color: white;
     font-weight: 900;
     font-size: 20px;
+
+    &:hover {
+      background: rgba(217, 217, 217, 0.12);
+    }
   }
 
   &__arrow {

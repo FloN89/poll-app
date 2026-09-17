@@ -83,17 +83,20 @@ a {
   font-weight: 800;
   box-shadow: none;
   transition:
-    transform 160ms ease,
-    filter 160ms ease;
+    background-color 160ms ease,
+    color 160ms ease;
 
   &:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.03);
+    background: var(--accent);
   }
 
   &--brown {
     background: var(--brown);
     color: white;
+
+    &:hover {
+      background: #96766b;
+    }
   }
 
   &--small {

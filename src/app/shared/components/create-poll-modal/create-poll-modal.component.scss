@@ -4,7 +4,8 @@
   z-index: 100;
   overflow: auto;
   width: 100%;
-  background: #fbfafc;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
   padding: 72px 24px;
 }
 
@@ -214,11 +215,11 @@
 
 @media (max-width: 920px) {
   .modal-backdrop {
-    padding: 0;
+    padding: 16px;
   }
 
   .modal {
-    min-height: 100vh;
+    min-height: calc(100vh - 32px);
     padding: 28px 18px;
     border-radius: 0;
 

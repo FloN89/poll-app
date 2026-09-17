@@ -7,13 +7,14 @@
   background: var(--card);
   color: white;
   border-radius: 6px 52px 6px 6px;
-  transition:
-    transform 160ms ease,
-    background 160ms ease;
+  transition: background 160ms ease;
 
   &:hover {
-    transform: translateY(-2px);
     background: #54405a;
+
+    .poll-card__badge {
+      background: var(--accent);
+    }
   }
 
   &--large {
