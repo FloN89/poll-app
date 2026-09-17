@@ -214,7 +214,7 @@
 
   .question-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 36px;
+    gap: 28px;
   }
 
   .question,
@@ -233,6 +233,6 @@
   }
 
   .results {
-    padding: 32px 18px 80px;
+    padding: 24px 18px 48px;
   }
 }

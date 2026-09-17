@@ -143,8 +143,11 @@
 }
 
 .questions {
-  width: min(430px, 100%);
-  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 64px;
+  width: 100%;
+  margin-top: 48px;
 }
 
 .form-hint {
@@ -163,7 +166,7 @@
 }
 
 .question {
-  margin-bottom: 42px;
+  min-width: 0;
 
   &__head {
     display: flex;
@@ -274,9 +277,7 @@
 }
 
 .add-question {
-  position: absolute;
-  left: 56%;
-  top: 238px;
+  margin-top: 28px;
 }
 
 @media (max-width: 920px) {
@@ -309,7 +310,9 @@
   }
 
   .questions {
-    margin-top: 36px;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-top: 28px;
   }
 
   .check {
@@ -317,8 +320,7 @@
   }
 
   .add-question {
-    position: static;
-    margin-top: 8px;
+    margin-top: 20px;
   }
 }
 
