@@ -192,10 +192,16 @@
               }
             </div>
 
-            <button class="link-btn" type="button" (click)="addOption(questionIndex)">
+            <button
+              class="link-btn"
+              type="button"
+              [disabled]="optionControls(questionIndex).length >= maximumOptions"
+              (click)="addOption(questionIndex)"
+            >
               Add answer
               <img class="plus-icon" src="/assets/add_circle.png" alt="" aria-hidden="true" />
             </button>
+            <span class="option-limit">You can add up to {{ maximumOptions }} answer fields.</span>
           </section>
         }
       </div>

@@ -46,6 +46,7 @@ export class CreatePollModalComponent {
 
   readonly categories = POLL_CATEGORIES;
   readonly minimumDeadline = localDateString();
+  readonly maximumOptions = 6;
   isSaving = false;
   saveError = '';
 
@@ -95,7 +96,11 @@ export class CreatePollModalComponent {
    * Adds a new answer option to one question.
    */
   addOption(questionIndex: number): void {
-    this.optionControls(questionIndex).push(this.createRequiredTextControl(''));
+    const options = this.optionControls(questionIndex);
+
+    if (options.length >= this.maximumOptions) return;
+
+    options.push(this.createRequiredTextControl(''));
   }
 
   /**

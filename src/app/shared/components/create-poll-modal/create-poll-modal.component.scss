@@ -218,6 +218,17 @@
     color: var(--accent-2);
     border-color: var(--accent-2);
   }
+
+  &:disabled {
+    color: var(--muted);
+    border-color: var(--muted);
+  }
+}
+
+.option-limit {
+  margin-left: 10px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .add-question {
