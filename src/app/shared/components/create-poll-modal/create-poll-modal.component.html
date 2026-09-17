@@ -5,7 +5,7 @@
 
       <button class="modal__close btn btn--brown" type="button" (click)="closed.emit()">
         Cancel
-        <span aria-hidden="true">×</span>
+        <span class="close-icon" aria-hidden="true">&times;</span>
       </button>
     </div>
 
@@ -22,6 +22,7 @@
             class="input"
             type="text"
             formControlName="title"
+            placeholder="Enter survey name"
             required
             [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid"
             aria-describedby="title-error"
@@ -33,7 +34,12 @@
 
         <div class="field field--text">
           <label for="description"> Describing text <span>(optional)</span> </label>
-          <textarea id="description" class="textarea" formControlName="description"></textarea>
+          <textarea
+            id="description"
+            class="textarea"
+            formControlName="description"
+            placeholder="Briefly describe your survey"
+          ></textarea>
         </div>
 
         <div class="field">
@@ -68,7 +74,7 @@
                 title="Delete question"
                 (click)="removeQuestion(questionIndex)"
               >
-                🗑
+                <span class="trash-icon" aria-hidden="true"></span>
               </button>
             </div>
 
@@ -76,6 +82,7 @@
               class="input"
               type="text"
               formControlName="title"
+              placeholder="Which date would work best for you?"
               required
               [id]="'question-' + questionIndex"
               [attr.aria-invalid]="question.get('title')?.touched && question.get('title')?.invalid"
@@ -111,6 +118,7 @@
                       required
                       [id]="'option-' + questionIndex + '-' + optionIndex"
                       [formControlName]="optionIndex"
+                      [placeholder]="'Answer ' + optionLetter(optionIndex)"
                       [attr.aria-invalid]="option.touched && option.invalid"
                       [attr.aria-describedby]="
                         'option-' + questionIndex + '-' + optionIndex + '-error'
@@ -132,21 +140,21 @@
                     title="Delete answer"
                     (click)="removeOption(questionIndex, optionIndex)"
                   >
-                    🗑
+                    <span class="trash-icon" aria-hidden="true"></span>
                   </button>
                 </div>
               }
             </div>
 
             <button class="link-btn" type="button" (click)="addOption(questionIndex)">
-              Add answer ⊕
+              Add answer <span class="plus-icon" aria-hidden="true">&#8853;</span>
             </button>
           </section>
         }
       </div>
 
       <button class="btn btn--brown add-question" type="button" (click)="addQuestion()">
-        Add next question ⊕
+        Add next question <span class="plus-icon" aria-hidden="true">&#8853;</span>
       </button>
     </form>
 
@@ -159,4 +167,18 @@
       </button>
     </div>
   </section>
+
+  @if (createdPollId) {
+    <div class="success-backdrop">
+      <section class="success-dialog" role="dialog" aria-modal="true" aria-labelledby="created-title">
+        <span class="success-dialog__icon" aria-hidden="true">&#10003;</span>
+        <h2 id="created-title">Survey created</h2>
+        <p>Your new survey was created successfully.</p>
+        <div class="success-dialog__actions">
+          <button class="btn btn--ghost" type="button" (click)="closed.emit()">Close</button>
+          <button class="btn" type="button" (click)="openCreatedPoll()">Open survey</button>
+        </div>
+      </section>
+    </div>
+  }
 </div>

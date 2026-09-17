@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { Subscription } from 'rxjs';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { CreatePollModalComponent } from '../../shared/components/create-poll-modal/create-poll-modal.component';
 import { Poll, PollQuestion, formatDeadline, isPollPast } from '../../core/models/poll.model';
@@ -26,6 +27,7 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   readonly submittedQuestions = signal<Record<string, boolean>>({});
 
   private voteChannel: RealtimeChannel | null = null;
+  private routeSubscription: Subscription | null = null;
 
   readonly formattedDeadline = computed(() => {
     const currentPoll = this.poll();
@@ -44,7 +46,32 @@ export class PollDetailComponent implements OnInit, OnDestroy {
    * Loads the current poll and starts the live vote subscription.
    */
   async ngOnInit(): Promise<void> {
-    const pollId = this.route.snapshot.paramMap.get('id');
+    this.routeSubscription = this.route.paramMap.subscribe((params) => {
+      void this.openPoll(params.get('id'));
+    });
+  }
+
+  /**
+   * Removes the live vote subscription when the page is destroyed.
+   */
+  async ngOnDestroy(): Promise<void> {
+    this.routeSubscription?.unsubscribe();
+
+    if (!this.voteChannel) return;
+
+    await this.pollService.unsubscribe(this.voteChannel);
+  }
+
+  /** Loads the survey whenever its route ID changes, including same-page navigation. */
+  private async openPoll(pollId: string | null): Promise<void> {
+    if (this.voteChannel) {
+      await this.pollService.unsubscribe(this.voteChannel);
+      this.voteChannel = null;
+    }
+
+    this.poll.set(null);
+    this.selectedOptions.set({});
+    this.submittedQuestions.set({});
 
     if (!pollId || !this.isUuid(pollId)) {
       this.loading.set(false);
@@ -53,15 +80,6 @@ export class PollDetailComponent implements OnInit, OnDestroy {
 
     await this.loadPoll(pollId);
     if (this.poll()) this.voteChannel = this.createVoteSubscription(pollId);
-  }
-
-  /**
-   * Removes the live vote subscription when the page is destroyed.
-   */
-  async ngOnDestroy(): Promise<void> {
-    if (!this.voteChannel) return;
-
-    await this.pollService.unsubscribe(this.voteChannel);
   }
 
   /**

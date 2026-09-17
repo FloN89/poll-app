@@ -1,6 +1,5 @@
 .hero {
-  width: min(1440px, 100%);
-  margin-inline: auto;
+  width: 100%;
   min-height: 704px;
   background: var(--bg);
 
@@ -54,8 +53,7 @@
 }
 
 .surveys {
-  width: min(1440px, 100%);
-  margin-inline: auto;
+  width: 100%;
   padding: 4px 0 74px;
   background: var(--bg);
 

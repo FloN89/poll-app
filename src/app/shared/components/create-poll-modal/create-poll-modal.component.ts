@@ -26,6 +26,7 @@ export class CreatePollModalComponent {
   readonly categories = POLL_CATEGORIES;
   isSaving = false;
   saveError = '';
+  createdPollId: string | null = null;
 
   readonly form = this.formBuilder.group({
     status: this.formBuilder.control<PollStatus>('draft', { nonNullable: true }),
@@ -104,7 +105,7 @@ export class CreatePollModalComponent {
     this.saveError = '';
 
     try {
-      await this.savePoll(status);
+      await this.savePoll();
     } catch (error) {
       this.handleSaveError(error);
     } finally {
@@ -129,18 +130,19 @@ export class CreatePollModalComponent {
     return true;
   }
 
-  /**
-   * Creates the poll and opens it when it was published.
-   */
-  private async savePoll(status: PollStatus): Promise<void> {
+  /** Creates the poll and opens the confirmation dialog. */
+  private async savePoll(): Promise<void> {
     const payload = this.buildPayload();
     const pollId = await this.pollService.createPoll(payload);
+    this.createdPollId = pollId;
+  }
 
+  /** Opens the newly created survey from the confirmation dialog. */
+  async openCreatedPoll(): Promise<void> {
+    if (!this.createdPollId) return;
+
+    await this.router.navigate(['/poll', this.createdPollId]);
     this.closed.emit();
-
-    if (status === 'published') {
-      await this.router.navigate(['/poll', pollId]);
-    }
   }
 
   /**
@@ -183,7 +185,7 @@ export class CreatePollModalComponent {
    */
   private createQuestionGroup() {
     return this.formBuilder.group({
-      title: this.createRequiredTextControl('Which date would work best for you?'),
+      title: this.createRequiredTextControl(''),
       allowMultiple: this.formBuilder.control(false, { nonNullable: true }),
       options: this.formBuilder.array([
         this.createRequiredTextControl(''),

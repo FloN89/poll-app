@@ -3,9 +3,7 @@
   inset: 0;
   z-index: 100;
   overflow: auto;
-  left: 50%;
-  width: min(1440px, 100%);
-  transform: translateX(-50%);
+  width: 100%;
   background: #fbfafc;
   padding: 72px 24px;
 }
@@ -157,9 +155,46 @@
 .icon-btn {
   width: 28px;
   height: 28px;
+  display: inline-grid;
+  place-items: center;
   background: transparent;
   color: white;
-  font-size: 18px;
+}
+
+.trash-icon {
+  position: relative;
+  display: block;
+  width: 14px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top: 0;
+  border-radius: 0 0 2px 2px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: -5px;
+    width: 16px;
+    border-top: 2px solid currentColor;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: -8px;
+    width: 6px;
+    height: 3px;
+    border: 2px solid currentColor;
+    border-bottom: 0;
+  }
+}
+
+.close-icon,
+.plus-icon {
+  font-size: 22px;
+  line-height: 1;
 }
 
 .link-btn {
@@ -175,6 +210,54 @@
   position: absolute;
   left: 56%;
   top: 238px;
+}
+
+.success-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(32, 21, 42, 0.68);
+}
+
+.success-dialog {
+  width: min(420px, 100%);
+  padding: 36px;
+  border-radius: 8px 48px 8px 8px;
+  background: var(--paper-2);
+  color: var(--dark-text);
+  text-align: center;
+  box-shadow: var(--shadow);
+
+  &__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--accent);
+    font-size: 30px;
+    font-weight: 900;
+  }
+
+  h2 {
+    margin: 18px 0 8px;
+    color: var(--dark-text);
+    font-family: var(--font-display);
+    font-size: 34px;
+  }
+
+  p {
+    margin: 0 0 26px;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
 }
 
 @media (max-width: 920px) {
