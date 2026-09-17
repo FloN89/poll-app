@@ -85,7 +85,7 @@
                 title="Delete question"
                 (click)="removeQuestion(questionIndex)"
               >
-                <span class="trash-icon" aria-hidden="true"></span>
+                <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
               </button>
             </div>
 
@@ -151,21 +151,23 @@
                     title="Delete answer"
                     (click)="removeOption(questionIndex, optionIndex)"
                   >
-                    <span class="trash-icon" aria-hidden="true"></span>
+                    <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
                   </button>
                 </div>
               }
             </div>
 
             <button class="link-btn" type="button" (click)="addOption(questionIndex)">
-              Add answer <span class="plus-icon" aria-hidden="true">&#8853;</span>
+              Add answer
+              <img class="plus-icon" src="/assets/add_circle.png" alt="" aria-hidden="true" />
             </button>
           </section>
         }
       </div>
 
       <button class="btn btn--brown add-question" type="button" (click)="addQuestion()">
-        Add next question <span class="plus-icon" aria-hidden="true">&#8853;</span>
+        Add next question
+        <img class="plus-icon" src="/assets/add_circle.png" alt="" aria-hidden="true" />
       </button>
     </form>
 

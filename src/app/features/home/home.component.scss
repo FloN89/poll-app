@@ -38,10 +38,13 @@
 
   &__plus {
     display: none;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
   }
 
   &__btn:hover &__plus {
-    display: inline;
+    display: inline-block;
   }
 
   &__image {
@@ -241,7 +244,7 @@
     }
 
     &__plus {
-      display: inline;
+      display: inline-block;
     }
   }
 
