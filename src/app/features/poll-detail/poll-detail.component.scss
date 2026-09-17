@@ -15,7 +15,7 @@
   display: grid;
   grid-template-columns: minmax(0, 700px) 1fr;
   gap: 42px;
-  align-items: start;
+  align-items: stretch;
   padding-bottom: 44px;
 }
 
