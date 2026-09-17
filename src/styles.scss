@@ -174,23 +174,30 @@ select {
   color: var(--dark-text);
   padding: 10px 14px;
   color-scheme: light;
-  transition: box-shadow 160ms ease;
+  transition: background-color 160ms ease;
 
-  &:hover,
-  &:focus,
-  &:active {
+  &:hover {
     background-color: #fbfafc;
   }
 
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    background-color: #fee9d4;
+    box-shadow: none;
+  }
+
   &:-webkit-autofill,
-  &:-webkit-autofill:hover,
-  &:-webkit-autofill:focus {
+  &:-webkit-autofill:hover {
     -webkit-text-fill-color: var(--dark-text);
     box-shadow: 0 0 0 1000px #fbfafc inset;
   }
 
-  &:focus {
-    box-shadow: 0 0 0 3px rgba(255, 179, 106, 0.35);
+  &:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--dark-text);
+    outline: none;
+    box-shadow: 0 0 0 1000px #fee9d4 inset;
   }
 }
 
