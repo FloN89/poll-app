@@ -35,7 +35,7 @@ export class PollService {
 
     if (error) throw error;
 
-    return this.attachDetails(data ?? []);
+    return this.attachDetails((data ?? []).filter((poll) => !poll.title.startsWith('[Test]')));
   }
 
   /**
