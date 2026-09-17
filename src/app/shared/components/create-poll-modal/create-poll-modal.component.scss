@@ -62,6 +62,22 @@
 }
 
 .field {
+  &__control-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .input,
+    .textarea {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &--top {
+      align-items: flex-start;
+    }
+  }
+
   label {
     display: block;
     margin-bottom: 6px;
@@ -160,6 +176,12 @@
   place-items: center;
   background: transparent;
   color: white;
+  border-radius: 6px;
+  transition: background-color 160ms ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
 }
 
 .trash-icon {
@@ -188,6 +210,14 @@
   color: white;
   border-bottom: 2px solid white;
   font-weight: 900;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease;
+
+  &:hover {
+    color: var(--accent-2);
+    border-color: var(--accent-2);
+  }
 }
 
 .add-question {

@@ -17,16 +17,27 @@
       <div class="modal__grid">
         <div class="field">
           <label for="title">Survey name <span class="required" aria-hidden="true">*</span></label>
-          <input
-            id="title"
-            class="input"
-            type="text"
-            formControlName="title"
-            placeholder="Enter survey name"
-            required
-            [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid"
-            aria-describedby="title-error"
-          />
+          <div class="field__control-row">
+            <input
+              id="title"
+              class="input"
+              type="text"
+              formControlName="title"
+              placeholder="Enter survey name"
+              required
+              [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid"
+              aria-describedby="title-error"
+            />
+            <button
+              class="icon-btn"
+              type="button"
+              title="Clear survey name"
+              aria-label="Clear survey name"
+              (click)="form.controls.title.setValue('')"
+            >
+              <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
+            </button>
+          </div>
           @if (form.controls.title.touched && form.controls.title.invalid) {
             <p id="title-error" class="field-error">Please enter a survey name.</p>
           }
@@ -34,25 +45,47 @@
 
         <div class="field field--text">
           <label for="description"> Describing text <span>(optional)</span> </label>
-          <textarea
-            id="description"
-            class="textarea"
-            formControlName="description"
-            placeholder="Briefly describe your survey"
-          ></textarea>
+          <div class="field__control-row field__control-row--top">
+            <textarea
+              id="description"
+              class="textarea"
+              formControlName="description"
+              placeholder="Briefly describe your survey"
+            ></textarea>
+            <button
+              class="icon-btn"
+              type="button"
+              title="Clear description"
+              aria-label="Clear description"
+              (click)="form.controls.description.setValue('')"
+            >
+              <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
+            </button>
+          </div>
         </div>
 
         <div class="field">
           <label for="deadline"> Set end date <span>(optional)</span> </label>
-          <input
-            id="deadline"
-            class="input"
-            type="date"
-            formControlName="deadline"
-            [min]="minimumDeadline"
-            [attr.aria-invalid]="form.controls.deadline.touched && form.controls.deadline.invalid"
-            aria-describedby="deadline-error"
-          />
+          <div class="field__control-row">
+            <input
+              id="deadline"
+              class="input"
+              type="date"
+              formControlName="deadline"
+              [min]="minimumDeadline"
+              [attr.aria-invalid]="form.controls.deadline.touched && form.controls.deadline.invalid"
+              aria-describedby="deadline-error"
+            />
+            <button
+              class="icon-btn"
+              type="button"
+              title="Clear end date"
+              aria-label="Clear end date"
+              (click)="form.controls.deadline.setValue(null)"
+            >
+              <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
+            </button>
+          </div>
           @if (form.controls.deadline.touched && form.controls.deadline.hasError('pastDate')) {
             <p id="deadline-error" class="field-error">Please select today or a future date.</p>
           }
@@ -83,6 +116,7 @@
                 class="icon-btn"
                 type="button"
                 title="Delete question"
+                aria-label="Delete question"
                 (click)="removeQuestion(questionIndex)"
               >
                 <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />
@@ -149,6 +183,7 @@
                     class="icon-btn"
                     type="button"
                     title="Delete answer"
+                    aria-label="Delete answer"
                     (click)="removeOption(questionIndex, optionIndex)"
                   >
                     <img class="trash-icon" src="/assets/delete.png" alt="" aria-hidden="true" />

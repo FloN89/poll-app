@@ -40,6 +40,8 @@
     display: none;
     width: 20px;
     height: 20px;
+    filter: brightness(0) saturate(100%) invert(10%) sepia(13%) saturate(2153%) hue-rotate(245deg)
+      brightness(91%) contrast(94%);
     object-fit: contain;
   }
 
@@ -55,6 +57,10 @@
     img {
       width: min(420px, 100%);
       object-fit: contain;
+    }
+
+    &:hover img {
+      content: url('/assets/big_logo_hover.png');
     }
   }
 }
@@ -152,6 +158,11 @@
 
       &:hover {
         background: #f5edf8;
+      }
+
+      &:focus-visible {
+        position: relative;
+        z-index: 1;
       }
     }
   }

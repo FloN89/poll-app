@@ -12,6 +12,11 @@
 
   &__logo {
     display: block;
+    transition: opacity 160ms ease;
+
+    &:hover {
+      opacity: 0.78;
+    }
   }
 
   img {
