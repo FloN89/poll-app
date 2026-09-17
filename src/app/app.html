@@ -1,1 +1,11 @@
 <router-outlet></router-outlet>
+
+@if (notification.message()) {
+  <div class="notification" role="status" aria-live="polite">
+    <span class="notification__icon" aria-hidden="true">&#10003;</span>
+    <span>{{ notification.message() }}</span>
+    <button type="button" aria-label="Close notification" (click)="notification.dismiss()">
+      &times;
+    </button>
+  </div>
+}

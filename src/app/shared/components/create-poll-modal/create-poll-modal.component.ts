@@ -1,5 +1,12 @@
 import { Component, EventEmitter, Output, inject } from '@angular/core';
-import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   CreatePollPayload,
@@ -8,6 +15,19 @@ import {
   PollStatus,
 } from '../../../core/models/poll.model';
 import { PollService } from '../../../core/services/poll.service';
+import { NotificationService } from '../../../core/services/notification.service';
+
+function localDateString(date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+function futureDateValidator(control: AbstractControl<string | null>): ValidationErrors | null {
+  return control.value && control.value < localDateString() ? { pastDate: true } : null;
+}
 
 @Component({
   selector: 'app-create-poll-modal',
@@ -22,17 +42,18 @@ export class CreatePollModalComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly pollService = inject(PollService);
   private readonly router = inject(Router);
+  private readonly notification = inject(NotificationService);
 
   readonly categories = POLL_CATEGORIES;
+  readonly minimumDeadline = localDateString();
   isSaving = false;
   saveError = '';
-  createdPollId: string | null = null;
 
   readonly form = this.formBuilder.group({
     status: this.formBuilder.control<PollStatus>('draft', { nonNullable: true }),
     title: this.createRequiredTextControl(''),
     description: this.formBuilder.control('', { nonNullable: true }),
-    deadline: this.formBuilder.control<string | null>(null),
+    deadline: this.formBuilder.control<string | null>(null, [futureDateValidator]),
     category: this.formBuilder.control<PollCategory>('Team activities', {
       nonNullable: true,
       validators: [Validators.required],
@@ -130,18 +151,12 @@ export class CreatePollModalComponent {
     return true;
   }
 
-  /** Creates the poll and opens the confirmation dialog. */
+  /** Creates the poll, returns home and shows a confirmation notification. */
   private async savePoll(): Promise<void> {
     const payload = this.buildPayload();
-    const pollId = await this.pollService.createPoll(payload);
-    this.createdPollId = pollId;
-  }
-
-  /** Opens the newly created survey from the confirmation dialog. */
-  async openCreatedPoll(): Promise<void> {
-    if (!this.createdPollId) return;
-
-    await this.router.navigate(['/poll', this.createdPollId]);
+    await this.pollService.createPoll(payload);
+    this.notification.show('Survey published successfully.');
+    await this.router.navigate(['/']);
     this.closed.emit();
   }
 

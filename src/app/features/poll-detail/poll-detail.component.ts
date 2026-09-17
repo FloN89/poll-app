@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Subscription } from 'rxjs';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { CreatePollModalComponent } from '../../shared/components/create-poll-modal/create-poll-modal.component';
 import { Poll, PollQuestion, formatDeadline, isPollPast } from '../../core/models/poll.model';
 import { PollService } from '../../core/services/poll.service';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-poll-detail',
@@ -16,7 +17,9 @@ import { PollService } from '../../core/services/poll.service';
 })
 export class PollDetailComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly pollService = inject(PollService);
+  private readonly notification = inject(NotificationService);
 
   readonly poll = signal<Poll | null>(null);
   readonly loading = signal(true);
@@ -160,7 +163,8 @@ export class PollDetailComponent implements OnInit, OnDestroy {
     try {
       this.errorMessage.set('');
       await this.submitMissingQuestions(currentPoll);
-      alert('Thank you for participating!');
+      this.notification.show('Thank you for participating!');
+      await this.router.navigate(['/']);
     } catch (error) {
       console.error(error);
       this.errorMessage.set('Your votes could not be saved. Please try again.');
