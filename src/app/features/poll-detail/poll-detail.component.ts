@@ -118,7 +118,7 @@ export class PollDetailComponent implements OnInit, OnDestroy {
   /**
    * Toggles one option depending on the question selection type.
    */
-  async toggleOption(question: PollQuestion, optionId: string): Promise<void> {
+  toggleOption(question: PollQuestion, optionId: string): void {
     const currentPoll = this.poll();
 
     if (!currentPoll || isPollPast(currentPoll.deadline) || this.submittingQuestionId() !== null) {
@@ -132,22 +132,16 @@ export class PollDetailComponent implements OnInit, OnDestroy {
       ...this.selectedOptions(),
       [question.id]: nextOptions,
     });
+    this.storeDraftSelections(currentPoll.id);
+  }
 
-    try {
-      this.errorMessage.set('');
-      this.submittingQuestionId.set(question.id);
-      await this.saveQuestionVote(currentPoll.id, question);
-      await this.loadPoll(currentPoll.id, false);
-    } catch (error) {
-      console.error(error);
-      this.selectedOptions.set({
-        ...this.selectedOptions(),
-        [question.id]: currentOptions,
-      });
-      this.errorMessage.set('The live preview could not be updated. Please try again.');
-    } finally {
-      this.submittingQuestionId.set(null);
-    }
+  /** Returns the live local preview percentage before the draft is submitted. */
+  previewPercentage(question: PollQuestion, optionId: string, savedPercentage: number): number {
+    const selectedOptionIds = this.selectedOptions()[question.id] ?? [];
+
+    if (selectedOptionIds.length === 0) return savedPercentage;
+
+    return selectedOptionIds.includes(optionId) ? 100 : 0;
   }
 
   /**
@@ -185,6 +179,7 @@ export class PollDetailComponent implements OnInit, OnDestroy {
     try {
       this.errorMessage.set('');
       await this.submitMissingQuestions(currentPoll);
+      this.clearDraftSelections(currentPoll.id);
       await this.router.navigate(['/']);
       this.notification.show('Thank you for participating!');
     } catch (error) {
@@ -201,20 +196,25 @@ export class PollDetailComponent implements OnInit, OnDestroy {
 
     this.poll.set(loadedPoll);
 
-    if (loadedPoll && withSelections) await this.restoreSelections(loadedPoll);
+    if (loadedPoll && withSelections) this.restoreDraftSelections(loadedPoll);
   }
 
   /**
-   * Restores already selected answers for the current browser user.
+   * Restores locally drafted answers without reading or changing database votes.
    */
-  private async restoreSelections(currentPoll: Poll): Promise<void> {
-    const selections: Record<string, string[]> = {};
+  private restoreDraftSelections(currentPoll: Poll): void {
+    if (typeof localStorage === 'undefined') return;
 
-    for (const question of currentPoll.questions) {
-      selections[question.id] = await this.pollService.getSelectedOptionIds(question.id);
+    const storedDraft = localStorage.getItem(this.draftStorageKey(currentPoll.id));
+
+    if (!storedDraft) return;
+
+    try {
+      const selections = JSON.parse(storedDraft) as Record<string, string[]>;
+      this.selectedOptions.set(selections);
+    } catch {
+      this.clearDraftSelections(currentPoll.id);
     }
-
-    this.selectedOptions.set(selections);
   }
 
   /**
@@ -281,6 +281,23 @@ export class PollDetailComponent implements OnInit, OnDestroy {
         await this.saveQuestionVote(currentPoll.id, question);
       }
     }
+  }
+
+  /** Persists the unfinished survey locally until the user completes it. */
+  private storeDraftSelections(pollId: string): void {
+    if (typeof localStorage === 'undefined') return;
+
+    localStorage.setItem(this.draftStorageKey(pollId), JSON.stringify(this.selectedOptions()));
+  }
+
+  private clearDraftSelections(pollId: string): void {
+    if (typeof localStorage === 'undefined') return;
+
+    localStorage.removeItem(this.draftStorageKey(pollId));
+  }
+
+  private draftStorageKey(pollId: string): string {
+    return `poll-app-draft-${pollId}`;
   }
 
   private isUuid(value: string): boolean {

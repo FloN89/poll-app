@@ -94,10 +94,13 @@
                 <span>{{ optionLetter(optionIndex) }}</span>
 
                 <div class="bar">
-                  <div class="bar__fill" [style.width.%]="option.percentage"></div>
+                  <div
+                    class="bar__fill"
+                    [style.width.%]="previewPercentage(question, option.id, option.percentage)"
+                  ></div>
                 </div>
 
-                <strong>{{ option.percentage }}%</strong>
+                <strong> {{ previewPercentage(question, option.id, option.percentage) }}% </strong>
               </div>
             }
           </section>
